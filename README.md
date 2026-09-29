@@ -1,77 +1,36 @@
-# Project README
+# Multilingual PDF Chatbot (RAG)
 
-## Project Overview
+Upload PDFs and ask questions about them **in any language**. A Streamlit app built on a
+Retrieval-Augmented Generation pipeline: answers come only from the documents, with the source pages listed.
 
-This project involves loading and utilizing a robust machine learning model within a Jupyter notebook. The provided notebook (`Submission.ipynb`) efficiently executes machine learning inference tasks and provides capabilities for processing multiple PDFs simultaneously. Additionally, it supports multilingual inputs and can handle text in various languages.
+## How it works
 
-## Key Features
+```
+PDFs ──► PyMuPDF text extraction ──► chunking (300 / overlap 100)
+     ──► all-mpnet-base-v2 embeddings ──► FAISS index
 
-- **Multiple PDF Handling**: The model can process and analyze multiple PDF documents simultaneously, extracting relevant information effectively.
-- **Multilingual Support**: Designed to support and accurately process text in multiple languages, enhancing its utility in diverse linguistic environments.
-
-## Dependencies
-
-To ensure smooth execution, install the following Python dependencies. It is recommended to use a virtual environment:
-
-### Step-by-Step Installation
-
-1. **Create and Activate Virtual Environment**
-
-```bash
-python3 -m venv env
-source env/bin/activate  # On Windows use: .\env\Scripts\activate
+Question ──► language detection (langdetect)
+         ──► translate to English (M2M100-418M, if needed)
+         ──► MMR retrieval (k=3 of 10) ──► Llama-2-7B-Chat answer
+         ──► translate back to the user's language ──► answer + source pages
 ```
 
-2. **Install Dependencies**
+- **Multi-PDF:** index several documents at once, with page-level metadata
+- **Multilingual:** questions and answers in the user's language via M2M100 translation
+- **Diverse context:** Maximal Marginal Relevance retrieval reduces redundant chunks
+- **Grounded answers:** a strict prompt, plus a similarity threshold that returns *"Sorry, I couldn't find anything"* instead of guessing
+- **Logging:** every Q&A is written to `chat_logs.txt`
 
-Run the following commands to install the necessary libraries:
+## Tech stack
 
-```bash
-pip install torch
-pip install transformers
-pip install langchain
-pip install faiss-cpu
-pip install streamlit
-pip install PyMuPDF  # for fitz
-pip install langdetect
-pip install sentence-transformers
-```
+LangChain · FAISS · Hugging Face Transformers · sentence-transformers · Llama 2 · M2M100 · Streamlit · PyMuPDF
 
-Alternatively, install all at once using:
+## Running it
 
-```bash
-pip install torch transformers langchain faiss-cpu streamlit PyMuPDF langdetect sentence-transformers
-```
+The notebook `Submission.ipynb` is designed for Google Colab (GPU recommended):
 
-## Running the Notebook
+1. Open the notebook and run the install cells.
+2. Log in to Hugging Face. Llama 2 is a gated model, so you need approved access.
+3. Run the `%%writefile app.py` cell, then the final cell to launch Streamlit through localtunnel.
 
-To execute the notebook:
-
-1. Activate your environment:
-
-```bash
-source env/bin/activate
-```
-
-2. Launch Jupyter Notebook:
-
-```bash
-jupyter notebook Submission.ipynb
-```
-
-## Important Notes
-
-- **Model Loading Time**: The model used in this notebook is substantial and may take a few minutes to load. This delay is normal and expected.
-- **If Loading Fails**: If the model loading process fails or times out, simply refresh or restart the notebook kernel and re-execute. The model will successfully load upon retrying.
-- **System Resources**: Ensure sufficient system resources (RAM and CPU/GPU) are available to manage the model's size and computational demands effectively.
-
-## Advantages of This Model
-
-- Efficiently manages and interprets data from complex and large PDF documents.
-- Provides reliable multilingual processing, facilitating broader usability.
-- Enhanced accuracy and robustness in text extraction and analysis tasks.
-
-## Support
-
-For further issues or troubleshooting, ensure your environment and dependencies are correctly configured as described above.
-
+> The first run downloads Llama-2-7B (~13 GB); loading can take a few minutes.
