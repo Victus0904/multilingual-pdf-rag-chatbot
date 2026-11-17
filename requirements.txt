@@ -1,0 +1,13 @@
+# Versions follow the notebook (classic LangChain 0.1/0.2 import paths).
+streamlit
+pymupdf
+langdetect
+langchain>=0.1,<0.3
+langchain-community>=0.0.30,<0.3
+sentence-transformers
+faiss-cpu
+transformers
+torch
+sentencepiece
+accelerate
+huggingface-hub

@@ -1,5 +1,11 @@
 # Multilingual PDF Chatbot (RAG)
 
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![LangChain](https://img.shields.io/badge/LangChain-RAG-1C3C3C)
+![Llama 2](https://img.shields.io/badge/LLM-Llama%202%207B-blueviolet)
+![FAISS](https://img.shields.io/badge/vector%20store-FAISS-0467DF)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 Upload PDFs and ask questions about them **in any language**. A Streamlit app built on a
 Retrieval-Augmented Generation pipeline: answers come only from the documents, with the source pages listed.
 
@@ -27,6 +33,9 @@ LangChain · FAISS · Hugging Face Transformers · sentence-transformers · Llam
 
 ## Running it
 
+Dependencies are listed in `requirements.txt` (the notebook also installs them itself).
+
+
 The notebook `Submission.ipynb` is designed for Google Colab (GPU recommended):
 
 1. Open the notebook and run the install cells.
@@ -34,3 +43,8 @@ The notebook `Submission.ipynb` is designed for Google Colab (GPU recommended):
 3. Run the `%%writefile app.py` cell, then the final cell to launch Streamlit through localtunnel.
 
 > The first run downloads Llama-2-7B (~13 GB); loading can take a few minutes.
+
+## License
+
+Code: [MIT](LICENSE). Llama 2 is subject to Meta's
+[Llama 2 Community License](https://ai.meta.com/llama/license/).
